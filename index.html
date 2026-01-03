@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Surprise Box</title>
+
+  <style>
+    :root{
+      --bg1:#0f1020;
+      --bg2:#1a1b34;
+      --card:#15162b;
+      --text:#f5f6ff;
+      --muted:#b8b9d6;
+      --accent:#7c5cff;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(1200px 800px at 20% 10%, #2b2d68, transparent 60%),
+                  radial-gradient(900px 700px at 80% 90%, #3a1f5c, transparent 55%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .wrap{
+      width:min(720px, 92vw);
+      text-align:center;
+      padding:28px 18px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-weight:800;
+      letter-spacing:0.2px;
+    }
+    p{
+      margin:0 0 20px;
+      color:var(--muted);
+    }
+
+    /* Big surprise box button */
+    .gift-btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      width:min(420px, 90vw);
+      height:220px;
+      border-radius:22px;
+      background: linear-gradient(135deg, #2a2b55, #1b1c3a);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      color:var(--text);
+      position:relative;
+      overflow:hidden;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .gift-btn:active{
+      transform: translateY(2px) scale(0.995);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.40);
+    }
+
+    .gift-emoji{
+      font-size:84px;
+      display:block;
+      margin-top:18px;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.35));
+    }
+    .gift-text{
+      display:block;
+      margin-top:6px;
+      font-size:22px;
+      font-weight:800;
+    }
+    .gift-sub{
+      display:block;
+      margin-top:6px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    /* Ribbon stripes */
+    .gift-btn::before, .gift-btn::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      opacity:.8;
+      pointer-events:none;
+    }
+    .gift-btn::before{
+      background:
+        linear-gradient(90deg, transparent 0 44%, rgba(124,92,255,.85) 44% 56%, transparent 56% 100%);
+    }
+    .gift-btn::after{
+      background:
+        linear-gradient(0deg, transparent 0 44%, rgba(124,92,255,.55) 44% 56%, transparent 56% 100%);
+      mix-blend-mode:screen;
+    }
+
+    /* Modal overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background: rgba(0,0,0,0.65);
+      padding:20px;
+    }
+    .overlay.open{
+      display:grid;
+    }
+
+    /* Modal card + pop animation */
+    .modal{
+      width:min(720px, 94vw);
+      background: rgba(21, 22, 43, 0.92);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius:18px;
+      box-shadow: 0 22px 70px rgba(0,0,0,0.55);
+      overflow:hidden;
+      transform: scale(0.85);
+      opacity:0;
+      animation: none;
+    }
+    .overlay.open .modal{
+      animation: popIn .22s ease-out forwards;
+    }
+    @keyframes popIn{
+      0%   { transform: scale(0.80); opacity:0; }
+      70%  { transform: scale(1.03); opacity:1; }
+      100% { transform: scale(1.00); opacity:1; }
+    }
+
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .modal-title{
+      margin:0;
+      font-size:16px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .close{
+      border:0;
+      cursor:pointer;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      font-size:18px;
+      line-height:38px;
+    }
+
+    .modal-body{
+      padding:14px;
+    }
+    .modal-body img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:14px;
+      background:#0b0c18;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    a{ color: var(--accent); }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Surprise Box</h1>
+    <p>Button pe click karo — image popup me “pop” hoke aa jayegi.</p>
+
+    <button class="gift-btn" id="openBtn" aria-haspopup="dialog" aria-controls="popup">
+      <span class="gift-emoji">🎁</span>
+      <span class="gift-text">OPEN</span>
+      <span class="gift-sub">(Tap to reveal)</span>
+    </button>
+
+    <div class="hint">
+      Image file ko repo ke root me upload karo: <code>krishna-chutiya.jpg</code> (same folder as <code>index.html</code>).
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="modal" id="popup">
+      <div class="modal-head">
+        <p class="modal-title" id="popupTitle">Surprise!</p>
+        <button class="close" id="closeBtn" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <img src="krishna-chutiya.jpg" alt="Surprise image" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function openModal(){
+      overlay.classList.add('open');
+    }
+    function closeModal(){
+      overlay.classList.remove('open');
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    // Close if clicked outside modal
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    // Close on ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
